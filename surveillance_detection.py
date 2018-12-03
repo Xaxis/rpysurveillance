@@ -26,7 +26,8 @@ def main():
 
         # Initialize video stream and allow the camera sensor to warm up
         print("[INFO] warming up...")
-        vs = VideoStream(src=0).start()
+        vs1 = VideoStream(src=0).start()
+        vs2 = VideoStream(src=1).start()
         time.sleep(conf["camera_warmup_time"])
 
         # Start the FPS counter
@@ -44,7 +45,7 @@ def main():
 
                 # Grab the frame from the threaded video stream and resize it
                 # to 500px (to speedup processing)
-                frame = vs.read()
+                frame = vs1.read()
                 frame = imutils.resize(frame, width=500)
 
                 # Convert the input frame from (1) BGR to grayscale (for face
@@ -118,7 +119,7 @@ def main():
         print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
         # Clean up the camera and close open windows
-        vs.stop()
+        vs1.stop()
         cv2.destroyAllWindows()
 
 if __name__ == '__main__' :
