@@ -5,25 +5,29 @@ class MotionFacialDetection:
 
     def __init__(self, accumWeight=0.5, deltaThresh=5, minArea=5000):
 
-        # Set the OpenCV version,
+        # Set the OpenCV version and detection configuration
         self.isv2 = imutils.is_cv2()
         self.accumWeight = accumWeight
         self.deltaThresh = deltaThresh
         self.minArea = minArea
 
+        # Setup facial recog classifier
+        self.faceCascadePath = "haarcascade_frontalface_default.xml"
+        self.faceCascade = cv2.CascadeClassifier(self.faceCascadePath)
+
         # Initialize the average image for motion detection
         self.averageFrame = None
 
-    def update(self, frame):
+    def updateMotion(self, frame):
 
         # Initialize the list of motion locations
         motionLocs = []
 
-        # Convert the input frame from BGR to grayscale
+        # Convert the input frame from BGR to grayscale and gaussian blur
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
-        # Blur the frame and initialize the average frame
+        # Initialize the average frame
         if self.averageFrame is None:
             self.averageFrame = gray.copy().astype("float")
             return motionLocs
@@ -50,3 +54,19 @@ class MotionFacialDetection:
 
         # Return the set of locations
         return motionLocs
+
+    def updateFacial(self, frame):
+
+        # Convert the input frame from BGR to grayscale
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Initialize detected face locations
+        faceLocs = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30)
+        )
+
+        # Return detected faces
+        return faceLocs

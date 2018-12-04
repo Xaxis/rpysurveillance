@@ -30,17 +30,27 @@ while True:
         # Read the next frame from the video stream and resize it to
         # have a maximum width of 400 pixels
         frame = stream.read()
-        frame = imutils.resize(frame, width=400)
+        frame = imutils.resize(frame, width=500)
 
-        # Update the motion detector locations
-        motionLocs = detect.update(frame)
+        # Update/run the facial detector
+        faceLocs = detect.updateFacial(frame)
+
+        # Update/run the motion detector locations
+        motionLocs = detect.updateMotion(frame)
 
         # Allow the detector to run for enough frames to compute an average
         if total < 32:
             procFrames.append(frame)
             continue
 
-        # Otherwise check for a motion/facial detection
+        # Check for facial detection
+        if len(faceLocs) > 0:
+
+            # Draw rectangle around detected faces
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 3)
+
+        # Check for motion detection
         if len(motionLocs) > 0:
 
             # Initialize the minimum and maximum (x, y) coordinates
