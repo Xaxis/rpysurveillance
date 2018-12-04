@@ -23,18 +23,17 @@ class MotionFacialDetection:
         # Initialize the list of motion locations
         motionLocs = []
 
-        # Convert the input frame from BGR to grayscale and gaussian blur
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
+        # Add gaussian blur to frame
+        frame = cv2.GaussianBlur(frame, (21, 21), 0)
 
         # Initialize the average frame
         if self.averageFrame is None:
-            self.averageFrame = gray.copy().astype("float")
+            self.averageFrame = frame.copy().astype("float")
             return motionLocs
 
         # Compute the absolute difference between the current frame and the previous frame
-        cv2.accumulateWeighted(gray, self.averageFrame, self.accumWeight)
-        frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(self.averageFrame))
+        cv2.accumulateWeighted(frame, self.averageFrame, self.accumWeight)
+        frameDelta = cv2.absdiff(frame, cv2.convertScaleAbs(self.averageFrame))
 
         # Threshold the delta frame and apply a series of dilations to help fill in holes
         thresh = cv2.threshold(frameDelta, self.deltaThresh, 255, cv2.THRESH_BINARY)[1]
@@ -57,12 +56,9 @@ class MotionFacialDetection:
 
     def updateFacial(self, frame):
 
-        # Convert the input frame from BGR to grayscale
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
         # Initialize detected face locations
         faceLocs = self.faceCascade.detectMultiScale(
-            gray,
+            frame,
             scaleFactor=1.1,
             minNeighbors=5,
             minSize=(30, 30)

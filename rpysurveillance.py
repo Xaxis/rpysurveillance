@@ -28,9 +28,10 @@ while True:
     for (stream, detect) in zip((cam1, cam2), (cam1Detect, cam2Detect)):
 
         # Read the next frame from the video stream and resize it to
-        # have a maximum width of 400 pixels
+        # have a maximum width of 400 pixels and convert frame to grayscale
         frame = stream.read()
         frame = imutils.resize(frame, width=500)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Update/run the facial detector
         faceLocs = detect.updateFacial(frame)
@@ -47,7 +48,7 @@ while True:
         if len(faceLocs) > 0:
 
             # Draw rectangle around detected faces
-            for (x, y, w, h) in faces:
+            for (x, y, w, h) in faceLocs:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 3)
 
         # Check for motion detection
