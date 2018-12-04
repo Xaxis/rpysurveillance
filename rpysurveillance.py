@@ -3,18 +3,29 @@ from motionfacialdetection import MotionFacialDetection
 from imutils.video import VideoStream
 import numpy as np
 import datetime
+import warnings
+import argparse
 import imutils
 import time
 import cv2
+
+# Construct argument parser for detection configuration
+ap = argparse.ArgumentParser()
+ap.add_argument("-c", "--conf", default="rypsurveillance.json", help="path to the JSON configuration file")
+args = vars(ap.parse_args())
+
+# Filter warnings and load configuration file
+warnings.filterwarnings("ignore")
+conf = json.load(open(args["conf"]))
 
 # Initialize the video streams and allow them to warmup
 print("[INFO] starting cameras...")
 cam1 = VideoStream(src=0).start()
 cam2 = VideoStream(src=1).start()
-time.sleep(2.0)
+time.sleep(conf["camera_warmup_time"])
 
 # Initialize the two motion/facial detectors, along with the total number of frames read
-cam1Detect = MotionFacialDetection()
+cam1Detect = MotionFacialDetection(conf["accum_weight"], conf["delta_thresh"], conf["min_area"], conf["scale_factor"], conf["min_neighbors"], conf["min_size"])
 cam2Detect = MotionFacialDetection()
 total = 0
 
@@ -49,7 +60,7 @@ while True:
 
             # Draw rectangle around detected faces
             for (x, y, w, h) in faceLocs:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 3)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
         # Check for motion detection
         if len(motionLocs) > 0:
@@ -66,7 +77,7 @@ while True:
                 (minY, maxY) = (min(minY, y), max(maxY, y + h))
 
             # Draw the bounding box
-            cv2.rectangle(frame, (minX, minY), (maxX, maxY), (0, 0, 255), 3)
+            cv2.rectangle(frame, (minX, minY), (maxX, maxY), (0, 0, 255), 2)
 
         # Update the processed frames list
         procFrames.append(frame)

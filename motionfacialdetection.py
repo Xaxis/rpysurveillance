@@ -3,13 +3,18 @@ import cv2
 
 class MotionFacialDetection:
 
-    def __init__(self, accumWeight=0.5, deltaThresh=5, minArea=5000):
+    def __init__(self, accumWeight=0.5, deltaThresh=5, minArea=5000, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)):
 
-        # Set the OpenCV version and detection configuration
+        # Set the OpenCV version and motion detection configuration
         self.isv2 = imutils.is_cv2()
         self.accumWeight = accumWeight
         self.deltaThresh = deltaThresh
         self.minArea = minArea
+
+        # Setup facial recog configuration
+        self.scaleFactor = scaleFactor
+        self.minNeighbors = minNeighbors
+        self.minSize = minSize
 
         # Setup facial recog classifier
         self.faceCascadePath = "haarcascade_frontalface_default.xml"
@@ -59,9 +64,9 @@ class MotionFacialDetection:
         # Initialize detected face locations
         faceLocs = self.faceCascade.detectMultiScale(
             frame,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(30, 30)
+            scaleFactor=self.scaleFactor,
+            minNeighbors=self.minNeighbors,
+            minSize=self.minSize
         )
 
         # Return detected faces

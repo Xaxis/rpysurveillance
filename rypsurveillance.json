@@ -1,0 +1,10 @@
+{
+  "camera_warmup_time": 2.5,
+  "show_video": true,
+  "accum_weight": 0.5,
+  "delta_thresh": 5,
+  "min_area": 5000,
+  "scale_factor": 1.1,
+  "min_neighbors": 5,
+  "minSize": "(30, 30)"
+}
