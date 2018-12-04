@@ -26,7 +26,7 @@ time.sleep(conf["camera_warmup_time"])
 
 # Initialize the two motion/facial detectors, along with the total number of frames read
 cam1Detect = MotionFacialDetection(conf["accum_weight"], conf["delta_thresh"], conf["min_area"], conf["scale_factor"], conf["min_neighbors"], conf["min_size"])
-cam2Detect = MotionFacialDetection()
+cam2Detect = MotionFacialDetection(conf["accum_weight"], conf["delta_thresh"], conf["min_area"], conf["scale_factor"], conf["min_neighbors"], conf["min_size"])
 total = 0
 
 # Loop over the frames from the video streams
