@@ -49,7 +49,7 @@ while True:
 
             # Loop over the locations of motion and accumulate the minimum
             # and maximum locations of the bounding boxes
-            for l in locs:
+            for l in motionLocs:
                 (x, y, w, h) = cv2.boundingRect(l)
                 (minX, maxX) = (min(minX, x), max(maxX, x + w))
                 (minY, maxY) = (min(minY, y), max(maxY, y + h))
