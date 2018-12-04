@@ -27,7 +27,6 @@ def main():
         # Initialize video stream and allow the camera sensor to warm up
         print("[INFO] warming up...")
         vs1 = VideoStream(src=0).start()
-        vs2 = VideoStream(src=1).start()
         time.sleep(conf["camera_warmup_time"])
 
         # Start the FPS counter
