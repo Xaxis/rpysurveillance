@@ -31,13 +31,13 @@ while True:
         # have a maximum width of 400 pixels and convert frame to grayscale
         frame = stream.read()
         frame = imutils.resize(frame, width=500)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Update/run the facial detector
-        faceLocs = detect.updateFacial(frame)
+        faceLocs = detect.updateFacial(gray)
 
         # Update/run the motion detector locations
-        motionLocs = detect.updateMotion(frame)
+        motionLocs = detect.updateMotion(gray)
 
         # Allow the detector to run for enough frames to compute an average
         if total < 32:
