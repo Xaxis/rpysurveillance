@@ -12,7 +12,7 @@ import cv2
 
 # Construct argument parser for detection configuration
 ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--conf", default="rypsurveillance.json", help="path to the JSON configuration file")
+ap.add_argument("-c", "--conf", default="rpysurveillance.json", help="path to the JSON configuration file")
 args = vars(ap.parse_args())
 
 # Filter warnings and load configuration file
@@ -26,8 +26,22 @@ cam2 = VideoStream(src=1).start()
 time.sleep(conf["camera_warmup_time"])
 
 # Initialize the two motion/facial detectors, along with the total number of frames read
-cam1Detect = MotionFacialDetection(conf["accum_weight"], conf["delta_thresh"], conf["min_area"], conf["scale_factor"], conf["min_neighbors"], conf["min_size"])
-cam2Detect = MotionFacialDetection(conf["accum_weight"], conf["delta_thresh"], conf["min_area"], conf["scale_factor"], conf["min_neighbors"], conf["min_size"])
+cam1Detect = MotionFacialDetection(
+    conf["accum_weight"],
+    conf["delta_thresh"],
+    conf["min_area"],
+    conf["scale_factor"],
+    conf["min_neighbors"],
+    tuple(conf["min_size"].split(","))
+)
+cam2Detect = MotionFacialDetection(
+    conf["accum_weight"],
+    conf["delta_thresh"],
+    conf["min_area"],
+    conf["scale_factor"],
+    conf["min_neighbors"],
+    tuple(conf["min_size"].split(","))
+)
 total = 0
 
 # Loop over the frames from the video streams
