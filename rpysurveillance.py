@@ -23,6 +23,8 @@ while True:
 
     # Initialize the list of frames that have been processed
     procFrames = []
+
+    # Loop over the frames and their detectors
     for (stream, detect) in zip((cam1, cam2), (cam1Detect, cam2Detect)):
 
         # Read the next frame from the video stream and resize it to
@@ -39,7 +41,7 @@ while True:
             continue
 
         # Otherwise check for a motion/facial detection
-        if (len(motionLocs)) > 0:
+        if len(motionLocs) > 0:
 
             # Initialize the minimum and maximum (x, y) coordinates
             (minX, minY) = (np.inf, np.inf)
@@ -58,24 +60,24 @@ while True:
         # Update the processed frames list
         procFrames.append(frame)
 
-        # Increment the total number of frames read and grab the current timestamp
-        total += 1
-        timestamp = datetime.datetime.now()
-        ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+    # Increment the total number of frames read and grab the current timestamp
+    total += 1
+    timestamp = datetime.datetime.now()
+    ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
 
-        # Loop over the frames a second time
-        for (frame, name) in zip(procFrames, ("Cam 1", "Cam 2")):
+    # Loop over the frames a second time
+    for (frame, name) in zip(procFrames, ("Cam 1", "Cam 2")):
 
-            # Draw the timestamp on the frame and display it
-            cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-            cv2.imshow(name, frame)
+        # Draw the timestamp on the frame and display it
+        cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+        cv2.imshow(name, frame)
 
-        # Check to see if a key was pressed
-        key = cv2.waitKey(1) & 0xFF
+    # Check to see if a key was pressed
+    key = cv2.waitKey(1) & 0xFF
 
-        # If the `q` key was pressed break from the loop
-        if key == ord("q"):
-            break
+    # If the `q` key was pressed break from the loop
+    if key == ord("q"):
+        break
 
 # Cleanup and stop the cameras
 print("[INFO] cleaning up...")
