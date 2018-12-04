@@ -61,7 +61,7 @@ class MotionFacialDetection:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Initialize detected face locations
-        faceLocs = face_cascade.detectMultiScale(
+        faceLocs = self.faceCascade.detectMultiScale(
             gray,
             scaleFactor=1.1,
             minNeighbors=5,
