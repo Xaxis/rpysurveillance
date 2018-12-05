@@ -55,8 +55,8 @@ cam2Detect = MotionFacialDetection(
 # Initialize total number of frames counter
 total = 0
 
-# Initialize notification sending flag
-sending = False
+# Initialize email sending flag that sets email notification interval in seconds
+sendingTime = time.time()
 
 # Loop over the frames from the video streams
 while True:
@@ -91,24 +91,25 @@ while True:
             for (x, y, w, h) in faceLocs:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
-            # Send email when face detected
-            if sending == False:
-
-                # Set sending flag to prevent duplicate messages
-                sending = True
+            # Send email when face detected at no greater than set interval in seconds
+            currentTime = time.time()
+            if currentTime - sendingTime > conf["email_notification_interval"]:
 
                 # Grab timestamp to use for face file name
                 timestamp = datetime.datetime.now()
                 ts = timestamp.strftime("%Y%m%d-%H%M%S")
 
                 # Save image of possible face
-                cv2.imwrite("records/face-" + ts, total, frame)
+                faceImagePath = "records/face-" + ts + ".jpg"
+                cv2.imwrite(faceImagePath, frame)
 
-                # Send the gmail notification
-                #facialNotification(conf["email_face_message"])
+                # Send and notify of the gmail notification sent
+                print(conf["email_face_message"])
+                faceMessage = conf["email_face_message"]
+                facialNotification.send(faceMessage, faceImagePath)
 
                 # Reset sending flag
-                sending = False
+                sendingTime = currentTime
 
         # Check for motion detection
         if len(motionLocs) > 0:
