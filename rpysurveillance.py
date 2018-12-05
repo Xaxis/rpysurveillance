@@ -1,5 +1,6 @@
 from __future__ import print_function
 from motionfacialdetection import MotionFacialDetection
+from gmailnotification import GmailNotification
 from imutils.video import VideoStream
 import numpy as np
 import datetime
@@ -19,13 +20,21 @@ args = vars(ap.parse_args())
 warnings.filterwarnings("ignore")
 conf = json.load(open(args["conf"]))
 
+# Initialize gmail notification
+print("[INFO] configuring gmail notifications...")
+facialNotification = GmailNotification(
+    conf["email_sender"],
+    conf["email_password"],
+    conf["email_recipients"]
+)
+
 # Initialize the video streams and allow them to warmup
 print("[INFO] starting cameras...")
 cam1 = VideoStream(src=0).start()
 cam2 = VideoStream(src=1).start()
 time.sleep(conf["camera_warmup_time"])
 
-# Initialize the two motion/facial detectors, along with the total number of frames read
+# Initialize the two motion/facial detectors
 cam1Detect = MotionFacialDetection(
     conf["accum_weight"],
     conf["delta_thresh"],
@@ -42,7 +51,12 @@ cam2Detect = MotionFacialDetection(
     conf["min_neighbors"],
     tuple(conf["min_size"].split(","))
 )
+
+# Initialize total number of frames counter
 total = 0
+
+# Initialize notification sending flag
+sending = False
 
 # Loop over the frames from the video streams
 while True:
@@ -76,6 +90,25 @@ while True:
             # Draw rectangle around detected faces
             for (x, y, w, h) in faceLocs:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+
+            # Send email when face detected
+            if sending == False:
+
+                # Set sending flag to prevent duplicate messages
+                sending = True
+
+                # Grab timestamp to use for face file name
+                timestamp = datetime.datetime.now()
+                ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+
+                # Save image of possible face
+                #cv2.imwrite("records/face-", total, frame)
+
+                # Send the gmail notification
+                #facialNotification(conf["email_face_message"])
+
+                # Reset sending flag
+                sending = False
 
         # Check for motion detection
         if len(motionLocs) > 0:

@@ -3,7 +3,14 @@ import cv2
 
 class MotionFacialDetection:
 
-    def __init__(self, accumWeight, deltaThresh, minArea, scaleFactor, minNeighbors, minSize):
+    def __init__(
+            self,
+            accumWeight,
+            deltaThresh,
+            minArea,
+            scaleFactor,
+            minNeighbors,
+            minSize):
 
         # Set the OpenCV version and motion detection configuration
         self.isv2 = imutils.is_cv2()
