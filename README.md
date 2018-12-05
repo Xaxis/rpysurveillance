@@ -36,8 +36,8 @@ addresses credentials and your target email address.
     recipients = ['target@gmail.com']
     ```
 
-There are further configuration values that can be changed. The non-obvious ones will
-be better documented in the future.
+    There are further configuration values that can be changed. The non-obvious ones will
+    be better documented in the future.
 
 3. Run the script:
 `sudo python3 rpysurveillance.py`
