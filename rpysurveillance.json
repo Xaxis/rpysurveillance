@@ -9,7 +9,7 @@
   "min_size": "30,30",
   "email_sender": "source@gmail.com",
   "email_password": "yourpassword",
-  "email_recipients": "target@gmail.com",
+  "email_recipients": ["target@gmail.com"],
   "email_face_message": "[INFO] A face has been detected.",
   "email_notification_interval": 3
 }
