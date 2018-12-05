@@ -99,10 +99,10 @@ while True:
 
                 # Grab timestamp to use for face file name
                 timestamp = datetime.datetime.now()
-                ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+                ts = timestamp.strftime("%Y%m%d-%H%M%S")
 
                 # Save image of possible face
-                #cv2.imwrite("records/face-", total, frame)
+                cv2.imwrite("records/face-" + ts, total, frame)
 
                 # Send the gmail notification
                 #facialNotification(conf["email_face_message"])
