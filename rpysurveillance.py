@@ -100,7 +100,7 @@ while True:
 
                 # Send email when face detected at no greater than set interval in seconds
                 currentFacialTime = time.time()
-                if currentFacialTime - sendingFacialTime > conf["email_facial_notification_interval"] & conf["facial_notification_on"]:
+                if (currentFacialTime - sendingFacialTime > conf["email_facial_notification_interval"]) & (conf["facial_notification_on"] == True):
 
                     # Send and notify of the gmail notification sent
                     print(conf["email_facial_message"])
@@ -129,7 +129,7 @@ while True:
 
             # Send email when face detected at no greater than set interval in seconds
             currentMotionTime = time.time()
-            if currentMotionTime - sendingMotionTime > conf["email_motion_notification_interval"] & conf["motion_notification_on"]:
+            if (currentMotionTime - sendingMotionTime > conf["email_motion_notification_interval"]) & (conf["motion_notification_on"] == True):
 
                 # Send and notify of the gmail notification sent
                 print(conf["email_motion_message"])
@@ -142,17 +142,18 @@ while True:
         # Update the processed frames list
         procFrames.append(frame)
 
-    # Increment the total number of frames read and grab the current timestamp
+    # Increment the total number of frames
     total += 1
-    timestamp = datetime.datetime.now()
-    ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
 
     # Loop over the frames a second time
-    for (frame, name) in zip(procFrames, ("Cam 1", "Cam 2")):
+    if conf["show_video"]:
+        timestamp = datetime.datetime.now()
+        ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+        for (frame, name) in zip(procFrames, ("Cam 1", "Cam 2")):
 
-        # Draw the timestamp on the frame and display it
-        cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-        cv2.imshow(name, frame)
+            # Draw the timestamp on the frame and display it
+            cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+            cv2.imshow(name, frame)
 
     # Check to see if a key was pressed
     key = cv2.waitKey(1) & 0xFF
