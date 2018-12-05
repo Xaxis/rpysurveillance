@@ -6,15 +6,19 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 
-class GmailNotification:
+class EmailNotification:
 
     def __init__(
             self,
+            server="smtp.gmail.com",
+            port=587,
             sender="source@gmail.com",
             password="yourpassword",
             recipients=["target@gmail.com"]):
 
         # Set configuration properties
+        self.server = server
+        self.port = port
         self.sender = sender
         self.password = password
         self.recipients = recipients
@@ -41,7 +45,7 @@ class GmailNotification:
                 msg.add_header("Content-Disposition", "attachment", filename=os.path.basename(imagePath))
                 self.outer.attach(msg)
             except:
-                print("[INFO] unable to open file attachments for gmail notification...")
+                print("[INFO] unable to open file attachments for email notification...")
                 raise
 
         # Stringify the composed message
@@ -49,16 +53,16 @@ class GmailNotification:
 
         # Attempt to send email
         try:
-            s = smtplib.SMTP("smtp.gmail.com", 587)
+            s = smtplib.SMTP(self.server, self.port)
             s.ehlo()
             s.starttls()
             s.ehlo()
             s.login(self.sender, self.password)
             s.sendmail(self.sender, self.recipients, composed)
             s.close()
-            print("[INFO] gmail notification sent...")
+            print("[INFO] email notification sent...")
         except:
-            print("[INFO] gmail notification failed to send...")
+            print("[INFO] email notification failed to send...")
             raise
 
         # Return

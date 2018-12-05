@@ -1,6 +1,6 @@
 from __future__ import print_function
 from motionfacialdetection import MotionFacialDetection
-from gmailnotification import GmailNotification
+from emailnotification import EmailNotification
 from imutils.video import VideoStream
 import numpy as np
 import datetime
@@ -22,7 +22,7 @@ conf = json.load(open(args["conf"]))
 
 # Initialize gmail notification
 print("[INFO] configuring gmail notifications...")
-facialNotification = GmailNotification(
+facialNotification = EmailNotification(
     conf["email_sender"],
     conf["email_password"],
     conf["email_recipients"]

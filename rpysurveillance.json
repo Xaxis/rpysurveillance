@@ -7,6 +7,8 @@
   "scale_factor": 1.1,
   "min_neighbors": 5,
   "min_size": "30,30",
+  "email_server": "smtp.gmail.com",
+  "email_port": 587,
   "email_sender": "source@gmail.com",
   "email_password": "yourpassword",
   "email_recipients": ["target@gmail.com"],
