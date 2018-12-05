@@ -100,7 +100,7 @@ while True:
 
                 # Send email when face detected at no greater than set interval in seconds
                 currentFacialTime = time.time()
-                if currentFacialTime - sendingFacialTime > conf["email_facial_notification_interval"]:
+                if currentFacialTime - sendingFacialTime > conf["email_facial_notification_interval"] & conf["facial_notification_on"]:
 
                     # Send and notify of the gmail notification sent
                     print(conf["email_facial_message"])
@@ -129,7 +129,7 @@ while True:
 
             # Send email when face detected at no greater than set interval in seconds
             currentMotionTime = time.time()
-            if currentMotionTime - sendingMotionTime > conf["email_motion_notification_interval"]:
+            if currentMotionTime - sendingMotionTime > conf["email_motion_notification_interval"] & conf["motion_notification_on"]:
 
                 # Send and notify of the gmail notification sent
                 print(conf["email_motion_message"])
@@ -137,7 +137,7 @@ while True:
                 emailNotification.send(motionMessage, frame, "motion-")
 
                 # Reset sending flag
-                sendingFacialTime = currentTime
+                sendingMotionTime = currentMotionTime
 
         # Update the processed frames list
         procFrames.append(frame)

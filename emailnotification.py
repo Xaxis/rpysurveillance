@@ -1,11 +1,12 @@
 import os
 import glob
 import smtplib
+import datetime
+import cv2
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
-import cv2
 
 class EmailNotification:
 
@@ -31,33 +32,30 @@ class EmailNotification:
         self.outer['From'] = sender
         self.outer.preamble = "You will not see this in a MIME-aware mail reader.\n"
 
-    def send(self, subject, imageframe, prefix):
+    def send(self, subject, frame, prefix):
 
         # Update subject line
         self.outer['Subject'] = subject
 
-        # Attach image to message when present
-        if imageframe:
+        # Grab timestamp to use for face file name
+        timestamp = datetime.datetime.now()
+        ts = timestamp.strftime("%Y%m%d-%H%M%S")
 
-            # Grab timestamp to use for face file name
-            timestamp = datetime.datetime.now()
-            ts = timestamp.strftime("%Y%m%d-%H%M%S")
+        # Save frame as image
+        imagepath = "records/" + prefix + ts + ".jpg"
+        cv2.imwrite(imagepath, frame)
 
-            # Save frame as image
-            imagepath = "records/" + prefix + ts + ".jpg"
-            cv2.imwrite(imagepath, frame)
-
-            # Attempt to send the email notification
-            try:
-                with open(imagepath, 'rb') as fp:
-                    msg = MIMEBase('application', "octet-stream")
-                    msg.set_payload(fp.read())
-                encoders.encode_base64(msg)
-                msg.add_header("Content-Disposition", "attachment", filename=os.path.basename(imagepath))
-                self.outer.attach(msg)
-            except:
-                print("[INFO] unable to open file attachments for email notification...")
-                raise
+        # Attempt to send the email notification
+        try:
+            with open(imagepath, 'rb') as fp:
+                msg = MIMEBase('application', "octet-stream")
+                msg.set_payload(fp.read())
+            encoders.encode_base64(msg)
+            msg.add_header("Content-Disposition", "attachment", filename=os.path.basename(imagepath))
+            self.outer.attach(msg)
+        except:
+            print("[INFO] unable to open file attachments for email notification...")
+            raise
 
         # Stringify the composed message
         composed = self.outer.as_string()

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Python + OpenCV Surveillance System (tailored for Raspberry Pi)
+Python + OpenCV Surveillance System (tailored for the Raspberry Pi)
 
 This is a multi-camera surveillance system that performs motion and facial detection.
 
