@@ -15,15 +15,19 @@ This is a multi-camera surveillance system that performs motion and facial detec
 
 ### Features
 
+* OpenCV based motion detection
+* OpenCV based facial detection
+* Email alerts upon face detection
+* Email alerts upon motion detection
+* Email alerts can be turned on/off
 * Easy to setup JSON configuration file
-*
 
 ### Getting started
 
 1. Clone the repo into your home directory:
-`sudo git clone https://github.com/Xaxis/rpisurveillance.git`
+`sudo git clone https://github.com/Xaxis/rpysurveillance.git`
 
-2. Update the following lines in `motion_detected.py` to match your sending email
+2. Update the following lines in `rpysurveillance.json` to match your sending email
 addresses credentials and your target email address.
 
     ```python
@@ -32,14 +36,11 @@ addresses credentials and your target email address.
     recipients = ['target@gmail.com']
     ```
 
-3. Run install the install script from within the `rpisurveillance` directory:
-`cd rpisurveillance`
-`chmod 777 install_rpi_surveillance.sh`
-`sudo ./install_rpi_surveillance.sh`
+There are further configuration values that can be changed. The non-obvious ones will
+be better documented in the future.
 
-4. That's all! Your motion detection system should work after your next reboot.
-If you want to test your setup before rebooting you can run:
-`sudo motion -s -c /home/.motion/motion.conf`
+3. Run the script:
+`sudo python3 rpysurveillance.py`
 
 ### Author
 

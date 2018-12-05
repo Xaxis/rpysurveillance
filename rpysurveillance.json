@@ -7,11 +7,17 @@
   "scale_factor": 1.1,
   "min_neighbors": 5,
   "min_size": "30,30",
+  "motion_detect": true,
+  "motion_notification_on": false,
+  "facial_detect": true,
+  "facial_notification_on": true,
   "email_server": "smtp.gmail.com",
   "email_port": 587,
   "email_sender": "source@gmail.com",
   "email_password": "yourpassword",
   "email_recipients": ["target@gmail.com"],
-  "email_face_message": "[INFO] A face has been detected.",
-  "email_notification_interval": 3
+  "email_motion_message": "[INFO] Motion has been detected.",
+  "email_facial_message": "[INFO] A face has been detected.",
+  "email_motion_notification_interval": 5,
+  "email_facial_notification_interval": 5
 }

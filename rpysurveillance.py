@@ -21,8 +21,10 @@ warnings.filterwarnings("ignore")
 conf = json.load(open(args["conf"]))
 
 # Initialize gmail notification
-print("[INFO] configuring gmail notifications...")
-facialNotification = EmailNotification(
+print("[INFO] configuring email notifications...")
+emailNotification = EmailNotification(
+    conf["email_server"],
+    conf["email_port"],
     conf["email_sender"],
     conf["email_password"],
     conf["email_recipients"]
@@ -55,8 +57,9 @@ cam2Detect = MotionFacialDetection(
 # Initialize total number of frames counter
 total = 0
 
-# Initialize email sending flag that sets email notification interval in seconds
-sendingTime = time.time()
+# Initialize email sending flags that sets email notification intervals in seconds
+sendingMotionTime = time.time()
+sendingFacialTime = time.time()
 
 # Loop over the frames from the video streams
 while True:
@@ -74,7 +77,8 @@ while True:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Update/run the facial detector
-        faceLocs = detect.updateFacial(gray)
+        if conf["facial_detect"]:
+            faceLocs = detect.updateFacial(gray)
 
         # Update/run the motion detector locations
         motionLocs = detect.updateMotion(gray)
@@ -84,32 +88,27 @@ while True:
             procFrames.append(frame)
             continue
 
-        # Check for facial detection
-        if len(faceLocs) > 0:
+        # Check for facial detection when configuration set to do so
+        if conf["facial_detect"]:
 
-            # Draw rectangle around detected faces
-            for (x, y, w, h) in faceLocs:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+            # Proceed when facial coordinates detected
+            if len(faceLocs) > 0:
 
-            # Send email when face detected at no greater than set interval in seconds
-            currentTime = time.time()
-            if currentTime - sendingTime > conf["email_notification_interval"]:
+                # Draw rectangle around detected faces
+                for (x, y, w, h) in faceLocs:
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
-                # Grab timestamp to use for face file name
-                timestamp = datetime.datetime.now()
-                ts = timestamp.strftime("%Y%m%d-%H%M%S")
+                # Send email when face detected at no greater than set interval in seconds
+                currentFacialTime = time.time()
+                if currentFacialTime - sendingFacialTime > conf["email_facial_notification_interval"]:
 
-                # Save image of possible face
-                faceImagePath = "records/face-" + ts + ".jpg"
-                cv2.imwrite(faceImagePath, frame)
+                    # Send and notify of the gmail notification sent
+                    print(conf["email_facial_message"])
+                    faceMessage = conf["email_facial_message"]
+                    emailNotification.send(faceMessage, frame, "face-")
 
-                # Send and notify of the gmail notification sent
-                print(conf["email_face_message"])
-                faceMessage = conf["email_face_message"]
-                facialNotification.send(faceMessage, faceImagePath)
-
-                # Reset sending flag
-                sendingTime = currentTime
+                    # Reset sending flag
+                    sendingFacialTime = currentFacialTime
 
         # Check for motion detection
         if len(motionLocs) > 0:
@@ -127,6 +126,18 @@ while True:
 
             # Draw the bounding box
             cv2.rectangle(frame, (minX, minY), (maxX, maxY), (0, 0, 255), 2)
+
+            # Send email when face detected at no greater than set interval in seconds
+            currentMotionTime = time.time()
+            if currentMotionTime - sendingMotionTime > conf["email_motion_notification_interval"]:
+
+                # Send and notify of the gmail notification sent
+                print(conf["email_motion_message"])
+                motionMessage = conf["email_motion_message"]
+                emailNotification.send(motionMessage, frame, "motion-")
+
+                # Reset sending flag
+                sendingFacialTime = currentTime
 
         # Update the processed frames list
         procFrames.append(frame)
