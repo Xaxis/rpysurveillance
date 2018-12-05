@@ -22,7 +22,7 @@ class GmailNotification:
 
         # Build enclosing (outer) message
         self.outer = MIMEMultipart()
-        self.outer['To'] = COMMASPACE.join(recipients)
+        self.outer['To'] = self.commaspace.join(recipients)
         self.outer['From'] = sender
         self.outer.preamble = "You will not see this in a MIME-aware mail reader.\n"
 
