@@ -2,6 +2,7 @@ from __future__ import print_function
 from motionfacialdetection import MotionFacialDetection
 from emailnotification import EmailNotification
 from imutils.video import VideoStream
+from flask import Flask, render_template, Response
 import numpy as np
 import datetime
 import warnings
@@ -154,6 +155,9 @@ while True:
             # Draw the timestamp on the frame and display it
             cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
             cv2.imshow(name, frame)
+
+            # Encode the frame as JPEG
+            jpeg = cv2.imencode('.jpg', frame)
 
     # Check to see if a key was pressed
     key = cv2.waitKey(1) & 0xFF
