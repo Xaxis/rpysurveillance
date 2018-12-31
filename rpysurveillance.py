@@ -2,7 +2,6 @@ from __future__ import print_function
 from motionfacialdetection import MotionFacialDetection
 from emailnotification import EmailNotification
 from imutils.video import VideoStream
-from flask import Flask, render_template, Response
 import numpy as np
 import datetime
 import warnings
