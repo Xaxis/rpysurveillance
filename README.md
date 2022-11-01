@@ -41,7 +41,3 @@ addresses credentials and your target email address.
 
 3. Run the script:
 `sudo python3 rpysurveillance.py`
-
-### Author
-
-Wil Neeley ( [twitter](http://twitter.com/wilneeley) / [linkedin](https://www.linkedin.com/in/wil-neeley-87500852/) )
